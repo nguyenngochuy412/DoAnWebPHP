@@ -1,0 +1,23 @@
+name: Deploy to Somee.com
+
+on:
+  push:
+    branches:
+      - main  # Chạy khi có sự thay đổi trong nhánh main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Set up FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
+        with:
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./  # Đường dẫn thư mục chứa mã nguồn
+          remote-dir: /path/to/your/project  # Đường dẫn thư mục trên server Somee
