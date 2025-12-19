@@ -15,17 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('image')->nullable();
             $table->text('description');
             $table->decimal('price', 10, 2);
-            $table->decimal('sale_price', 10, 2)->nullable();
-            $table->integer('stock')->default(0);
-            $table->string('breed'); // Giống loài
             $table->integer('age'); // Tháng tuổi
             $table->string('gender'); // male/female
             $table->string('color');
             $table->decimal('weight', 5, 2); // kg
             $table->string('vaccination_status');
-            $table->text('health_notes')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_active')->default(true);
             $table->foreignId('category_id')->constrained()->onDelete('cascade');

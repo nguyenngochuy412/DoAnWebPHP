@@ -4,47 +4,92 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Pet extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'description', 'price', 'sale_price', 'stock',
-        'breed', 'age', 'gender', 'color', 'weight', 'vaccination_status',
-        'health_notes', 'is_featured', 'is_active', 'category_id'
+        'name',
+        'slug',
+        'image',
+        'description',
+        'price',
+        'age',
+        'gender',
+        'color',
+        'weight',
+        'vaccination_status',
+        'is_featured',
+        'is_active',
+        'category_id'
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'sale_price' => 'decimal:2',
         'weight' => 'decimal:2',
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
     ];
+
+    protected $appends = [
+        'image_url'
+    ];
+
+    // Tự động tạo slug
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($pet) {
+            if (empty($pet->slug)) {
+                $pet->slug = Str::slug($pet->name);
+            }
+        });
+
+        static::updating(function ($pet) {
+            if ($pet->isDirty('name')) {
+                $pet->slug = Str::slug($pet->name);
+            }
+        });
+    }
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function images()
+    // Accessor cho image URL
+    public function getImageUrlAttribute()
     {
-        return $this->hasMany(PetImage::class);
+        if ($this->image) {
+            return asset('storage/' . $this->image);
+        }
+        return asset('images/default-pet.jpg'); // Ảnh mặc định
     }
 
-    public function getMainImageAttribute()
+    // Accessor cho vaccination status
+    public function getVaccinationTextAttribute()
     {
-        return $this->images->where('is_main', true)->first() ?? $this->images->first();
+        $statuses = [
+            'fully' => 'Đã tiêm đầy đủ',
+            'partial' => 'Đã tiêm một phần',
+            'none' => 'Chưa tiêm'
+        ];
+
+        return $statuses[$this->vaccination_status] ?? 'Không xác định';
     }
 
-    public function getCurrentPriceAttribute()
+    // Accessor cho gender
+    public function getGenderTextAttribute()
     {
-        return $this->sale_price ?? $this->price;
+        return $this->gender == 'male' ? 'Đực' : 'Cái';
     }
 
-    public function getRouteKeyName()
+    // Accessor cho formatted price
+    public function getFormattedPriceAttribute()
     {
-        return 'slug';
+        return number_format($this->price, 0, ',', '.') . ' đ';
     }
 }

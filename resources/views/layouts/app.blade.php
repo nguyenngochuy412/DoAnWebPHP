@@ -22,56 +22,43 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="fas fa-paw"></i> PetStore
-            </a>
-            
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/">Thú cưng</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/">Giới thiệu</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/">Liên hệ</a></li>
-                </ul>
-                
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">
-                            <i class="fas fa-shopping-cart"></i>
-                            Giỏ hàng 
-                            {{-- @if(\Cart::getTotalQuantity() > 0)
-                                <span class="badge bg-danger">{{ \Cart::getTotalQuantity() }}</span>
-                            @endif --}}
-                        </a>
-                    </li>
-                    @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                {{ Auth::user()->name }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ route('orders.history') }}">Lịch sử đơn hàng</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">Đăng xuất</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    @else
-                        <li class="nav-item"><a class="nav-link" href="/">Đăng nhập</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/">Đăng ký</a></li>
-                    @endauth 
-                </ul>
-            </div>
+            <h1 class="display-4 mb-4">Chào mừng đến với PetStore<a href="{{ route('home') }}"><i class="fas fa-paw"></i></a></h1>
+            <p class="lead mb-4">Nơi tìm thấy người bạn đồng hành hoàn hảo cho gia đình bạn</p>
         </div>
-    </nav>
+    </section>
+    <!-- Hiển thị flash messages -->
+    <div class="container mt-3">
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('warning'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i> {{ session('warning') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('info'))
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="fas fa-info-circle me-2"></i> {{ session('info') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+    </div>
     <!-- Main Content -->
     <main>
         @yield('content')

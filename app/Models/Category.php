@@ -4,23 +4,45 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Testing\Fluent\Concerns\Has;
+use Illuminate\Support\Str;
 
 class Category extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'description', 'image', 'is_active'
+        'name', 'slug', 'description', 'is_active'
     ];
+
+     protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    // Tự động tạo slug
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($category) {
+            if (empty($category->slug)) {
+                $category->slug = Str::slug($category->name);
+            }
+        });
+
+        static::updating(function ($category) {
+            if ($category->isDirty('name')) {
+                $category->slug = Str::slug($category->name);
+            }
+        });
+    }
 
     public function pets()
     {
         return $this->hasMany(Pet::class);
     }
 
-    public function getRouteKey()
-    {
-        return 'slug';
-    }
+    // public function getRouteKey()
+    // {
+    //     return 'slug';
+    // }
 }

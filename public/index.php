@@ -2,7 +2,8 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Kernel;
+//use Symfony\Component\HttpKernel\Kernel;
+use Illuminate\Contracts\Http\Kernel;
 
 define('LARAVEL_START', microtime(true));
 
