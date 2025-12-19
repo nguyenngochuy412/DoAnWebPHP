@@ -4,6 +4,7 @@
 
 @section('content')
 
+<H1>Nguyễn Ngọc Huy - Ca cuối</H1>
 <!-- Featured Pets -->
 @if(isset($featuredPets) && $featuredPets->count() > 0)
 <section class="py-5">
