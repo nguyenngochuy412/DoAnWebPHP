@@ -1,23 +1,35 @@
-name: Deploy to Infinity.com
+name: Deploy to InfinityFree
 
 on:
   push:
-    branches:
-      - main  # Chạy khi có sự thay đổi trong nhánh main
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: 🚚 Checkout code
+        uses: actions/checkout@v4
         
-      - name: Set up FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@4.1.0
+      - name: 📤 Deploy to InfinityFree via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          ftp-server: ${{ secrets.FTP_SERVER }}
-          ftp-username: ${{ secrets.FTP_USERNAME }}
-          ftp-password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./  # Đường dẫn thư mục chứa mã nguồn
-          remote-dir: /path/to/your/project  # Đường dẫn thư mục trên server Somee
+          server: ftp.infinityfree.com
+          username: ${{ secrets.INFINITY_USERNAME }}
+          password: ${{ secrets.INFINITY_PASSWORD }}
+          server-dir: /htdocs/  # QUAN TRỌNG: thư mục gốc của InfinityFree
+          local-dir: ./public   # Nếu dùng Laravel: upload thư mục public/
+          exclude: |
+            **/.git*
+            **/.github/*
+            **/node_modules/*
+            **/vendor/*
+            .env
+            .gitignore
+            *.md
+            composer.json
+            composer.lock
+            package.json
+            package-lock.json
