@@ -1,4 +1,4 @@
-name: Deploy to Somee.com
+name: Deploy to Infinity.com
 
 on:
   push:
