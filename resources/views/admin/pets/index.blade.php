@@ -313,7 +313,7 @@
                 </div>
                 
                 <!-- Pagination -->
-                <div class="mt-5">
+                <div class="pagination">
                     {{ $pets->withQueryString()->links() }}
                 </div>
             @else
@@ -376,6 +376,144 @@
 
 .badge {
     font-weight: 500;
+}
+
+/* Pet Shop Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 3rem 0 2rem;
+    padding: 0;
+    list-style: none;
+}
+
+.page-item {
+    margin: 0 2px;
+}
+
+.page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 45px;
+    height: 45px;
+    padding: 0 12px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 2px solid #e9ecef;
+    color: #495057;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.page-link:hover {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-color: #4dabf7;
+    color: #339af0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(77, 171, 247, 0.15);
+}
+
+/* Active page with pet theme */
+.page-item.active .page-link {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+    border-color: #ff6b6b;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    animation: gentlePulse 2s infinite;
+}
+
+@keyframes gentlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+}
+
+/* Previous/Next buttons with paw icons */
+.page-item:first-child .page-link::before {
+    content: "🐾";
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.page-item:last-child .page-link::after {
+    content: "🐾";
+    margin-left: 8px;
+    font-size: 14px;
+}
+
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+    min-width: 110px;
+    padding: 0 20px;
+    border-radius: 25px;
+    background: #f1f3f5;
+    border-color: #dee2e6;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.page-item:first-child .page-link:hover,
+.page-item:last-child .page-link:hover {
+    background: #e9ecef;
+    border-color: #4dabf7;
+}
+
+/* Disabled state */
+.page-item.disabled .page-link {
+    background: #f8f9fa;
+    border-color: #e9ecef;
+    color: #adb5bd;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Dots */
+.page-item.disabled:not(.active) .page-link {
+    background: transparent;
+    border: none;
+    color: #868e96;
+    min-width: 20px;
+    box-shadow: none;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .pagination {
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 2rem 0;
+    }
+    
+    .page-link {
+        min-width: 40px;
+        height: 40px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+    
+    .page-item:first-child .page-link,
+    .page-item:last-child .page-link {
+        min-width: 90px;
+        padding: 0 15px;
+        font-size: 13px;
+    }
+    
+    /* Hide page numbers on very small screens, show only prev/next */
+    @media (max-width: 576px) {
+        .page-item:not(.active):not(:first-child):not(:last-child):not(.disabled) .page-link {
+            display: none;
+        }
+    }
 }
 </style>
 @endpush
