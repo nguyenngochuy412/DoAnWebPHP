@@ -1,35 +1,70 @@
-name: Deploy to InfinityFree
+name: Deploy Laravel to InfinityFree
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     steps:
-      - name: 🚚 Checkout code
-        uses: actions/checkout@v4
-        
-      - name: 📤 Deploy to InfinityFree via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ftp.infinityfree.com
-          username: ${{ secrets.INFINITY_USERNAME }}
-          password: ${{ secrets.INFINITY_PASSWORD }}
-          server-dir: /htdocs/  # QUAN TRỌNG: thư mục gốc của InfinityFree
-          local-dir: ./public   # Nếu dùng Laravel: upload thư mục public/
-          exclude: |
-            **/.git*
-            **/.github/*
-            **/node_modules/*
-            **/vendor/*
-            .env
-            .gitignore
-            *.md
-            composer.json
-            composer.lock
-            package.json
-            package-lock.json
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+    
+    - name: Copy .env for production
+      run: |
+        cp .env.example .env.production
+        # Tự động thay đổi giá trị production
+        sed -i 's/APP_ENV=local/APP_ENV=production/g' .env.production
+        sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env.production
+    
+    - name: Install Composer dependencies
+      run: composer install --no-dev --optimize-autoloader
+    
+    - name: Install NPM dependencies
+      run: npm ci --only=production
+    
+    - name: Build assets
+      run: npm run build
+    
+    - name: Prepare deployment folder
+      run: |
+        # Xóa file không cần thiết
+        rm -rf node_modules/
+        rm -rf tests/
+        # Tạo storage link symbolic (sẽ tạo trên server)
+        php artisan storage:link || true
+    
+    - name: Upload via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./          # ← QUAN TRỌNG: PHẢI CÓ /
+        server-dir: ./htdocs/  # ← QUAN TRỌNG: PHẢI CÓ /
+        exclude: |
+          **/.git*
+          **/.git*/
+          **/node_modules/
+          **/tests/
+          **/storage/logs/*
+          .env
+          .env.example
+          .gitattributes
+          .gitignore
+          README.md
+          composer.json
+          composer.lock
+          package.json
+          package-lock.json
+          phpunit.xml
+          webpack.mix.js
+        exclude-clean: false
+        dangerous-clean-slate: false
