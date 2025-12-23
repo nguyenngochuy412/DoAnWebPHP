@@ -57,7 +57,7 @@
 
     <div class="text-center mt-4">
         <a href="{{ route('pets.index') }}" class="btn btn-primary btn-lg">
-            <i class="fas fa-paw me-2"></i> Xem tất cả {{ count($featuredPets) ?? 0 }} thú cưng
+            <i class="fas fa-paw me-2"></i> Xem tất cả thú cưng
         </a>
     </div>
     @endif
