@@ -64,7 +64,7 @@
                         <a href="{{ route('admin.pets.edit', $pet) }}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> Chỉnh sửa
                         </a>
-                        <a href="{{ route('home') }}" class="btn btn-secondary">
+                        <a href="{{ route('pets.index') }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Quay lại
                         </a>
                     </div>

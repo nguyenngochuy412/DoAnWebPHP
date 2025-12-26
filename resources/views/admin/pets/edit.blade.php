@@ -164,7 +164,7 @@
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('home') }}" class="btn btn-secondary">
+                            <a href="{{ route('pets.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Quay lại
                             </a>
                             <div>

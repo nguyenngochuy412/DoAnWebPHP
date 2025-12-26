@@ -1,0 +1,14 @@
+.git
+.gitignore
+.dockerignore
+docker-compose.yml
+README.md
+/node_modules
+/vendor
+/.idea
+/.vscode
+*.log
+*.sqlite
+*.sqlite-journal
+.DS_Store
+Thumbs.db
